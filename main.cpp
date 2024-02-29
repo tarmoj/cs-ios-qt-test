@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 
 #include "csound.hpp"
+#include "csoundproxy.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,13 +11,8 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
-    // csoundInitialize(CSOUNDINIT_NO_ATEXIT);
 
-    // CSOUND* csound = csoundCreate(NULL);
-
-    // qDebug() << "Csound 0dbfs: " << csoundGet0dBFS(csound);
-
-
+/*
     std::string orc = "sr=44100\n\
         ksmps=32\n\
         nchnls=2\n\
@@ -27,29 +23,17 @@ int main(int argc, char *argv[])
         outs aout, aout\n\
                 endin";
 
-                std::string sco = "i1 0 1";
+    std::string sco = "i1 0 1";
 
-    //create an instance of Csound
     Csound* csound = new Csound();
-
-    //set CsOptions
     csound->SetOption("-odac");
-
-    //compile orc.
     csound->CompileOrc(orc.c_str());
-
-    //compile sco
     csound->ReadScore(sco.c_str());
-
-    //prepare Csound for performance
     csound->Start();
-
-    //perform entire score
     csound->Perform();
-
     delete csound;
-
-
+*/
+    CsoundProxy csoundProxy;
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

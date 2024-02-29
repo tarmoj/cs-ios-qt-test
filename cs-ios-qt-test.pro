@@ -5,6 +5,7 @@ QT += quick
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        csoundproxy.mm \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -18,6 +19,7 @@ macos {
 
 ios {
     INCLUDEPATH += $$PWD/csound-iOS/headers
+    INCLUDEPATH += $$PWD/csound-iOS/classes
     LIBS += $$PWD/csound-iOS/libs/libcsound.a
     LIBS += $$PWD/csound-iOS/libs/libsndfile.a
     LIBS += -framework Accelerate
@@ -34,3 +36,6 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    csoundproxy.h
