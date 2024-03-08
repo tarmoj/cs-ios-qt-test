@@ -4,9 +4,7 @@ QT += quick
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-        csoundproxy.mm \
-        main.cpp
+
 
 RESOURCES += qml.qrc
 
@@ -18,11 +16,26 @@ macos {
 }
 
 ios {
+
+    SOURCES += \
+        csoundproxy.mm \
+        main.cpp \
+        csound-iOS/classes/CsoundObj.m
+
+    HEADERS += \
+        csound-iOS/classes/CsoundObj.h \
+        csoundproxy.h
+
+
     INCLUDEPATH += $$PWD/csound-iOS/headers
     INCLUDEPATH += $$PWD/csound-iOS/classes
+    INCLUDEPATH += $$PWD/csound-iOS/classes/midi
     LIBS += $$PWD/csound-iOS/libs/libcsound.a
     LIBS += $$PWD/csound-iOS/libs/libsndfile.a
     LIBS += -framework Accelerate
+    LIBS += -framework AVFAudio
+    LIBS += -framework CoreMidi
+    LIBS += -framework CoreMotion
 
 }
 
@@ -38,4 +51,35 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    csoundproxy.h
+    csound-iOS/classes/bindings/motion/CsoundAccelerometerBinding.h \
+    csound-iOS/classes/bindings/motion/CsoundAttitudeBinding.h \
+    csound-iOS/classes/bindings/motion/CsoundGyroscopeBinding.h \
+    csound-iOS/classes/bindings/motion/CsoundMotion.h \
+    csound-iOS/classes/bindings/ui/CsoundButtonBinding.h \
+    csound-iOS/classes/bindings/ui/CsoundLabelBinding.h \
+    csound-iOS/classes/bindings/ui/CsoundMomentaryButtonBinding.h \
+    csound-iOS/classes/bindings/ui/CsoundSliderBinding.h \
+    csound-iOS/classes/bindings/ui/CsoundSwitchBinding.h \
+    csound-iOS/classes/bindings/ui/CsoundUI.h \
+    csound-iOS/classes/midi/CsoundMIDI.h \
+    csound-iOS/classes/midi/MidiWidgetWrapper.h \
+    csound-iOS/classes/midi/MidiWidgetsManager.h \
+    csound-iOS/classes/midi/SliderMidiWidgetWrapper.h
+
+SOURCES += \
+    csound-iOS/classes/bindings/motion/CsoundAccelerometerBinding.m \
+    csound-iOS/classes/bindings/motion/CsoundAttitudeBinding.m \
+    csound-iOS/classes/bindings/motion/CsoundGyroscopeBinding.m \
+    csound-iOS/classes/bindings/motion/CsoundMotion.m \
+    csound-iOS/classes/bindings/ui/CsoundButtonBinding.m \
+    csound-iOS/classes/bindings/ui/CsoundLabelBinding.m \
+    csound-iOS/classes/bindings/ui/CsoundMomentaryButtonBinding.m \
+    csound-iOS/classes/bindings/ui/CsoundSliderBinding.m \
+    csound-iOS/classes/bindings/ui/CsoundSwitchBinding.m \
+    csound-iOS/classes/bindings/ui/CsoundUI.m \
+    csound-iOS/classes/midi/CsoundMIDI.m \
+    csound-iOS/classes/midi/MidiWidgetsManager.m \
+    csound-iOS/classes/midi/SliderMidiWidgetWrapper.m
+
+
+

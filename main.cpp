@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "csound.hpp"
+//#include "csound.hpp"
 #include "csoundproxy.h"
 
 int main(int argc, char *argv[])
