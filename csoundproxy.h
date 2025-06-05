@@ -12,6 +12,8 @@ public:
     ~CsoundProxy();
 
     Q_INVOKABLE void play();
+    Q_INVOKABLE void setChannel(QString channel, double value);
+
     //CSOUND * getCsound();
     
 private:

@@ -34,8 +34,16 @@ Window {
             csoundProxy.play()
         }
 
+    }
+
+    Slider {
+        anchors.centerIn:  parent
+        anchors.topMargin: -50
+        from: 100
+        to:1000
 
 
+        onValueChanged: csoundProxy.setChannel("slider", value)
     }
 
 

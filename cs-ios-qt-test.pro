@@ -90,5 +90,8 @@ SOURCES += \
     csound-iOS/classes/midi/MidiWidgetsManager.m \
     csound-iOS/classes/midi/SliderMidiWidgetWrapper.m
 
+DISTFILES += \
+    test.csd
+
 
 
