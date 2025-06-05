@@ -1,10 +1,21 @@
 #ifndef CSOUNDPROXY_H
 #define CSOUNDPROXY_H
 
-class CsoundProxy
+#include <QObject>
+
+
+class CsoundProxy: public QObject
 {
+    Q_OBJECT
 public:
-    CsoundProxy();
+    explicit CsoundProxy(QObject *parent = nullptr);
+    ~CsoundProxy();
+
+    Q_INVOKABLE void play();
+    //CSOUND * getCsound();
+    
+private:
+    void * cs;
 };
 
 #endif // CSOUNDPROXY_H

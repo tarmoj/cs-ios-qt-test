@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
 
 //#include "csound.hpp"
 #include "csoundproxy.h"
@@ -36,7 +38,10 @@ int main(int argc, char *argv[])
     CsoundProxy csoundProxy;
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("csoundProxy", &csoundProxy);
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreated,
@@ -46,6 +51,7 @@ int main(int argc, char *argv[])
                 QCoreApplication::exit(-1);
         },
         Qt::QueuedConnection);
+
     engine.load(url);
 
     return app.exec();

@@ -1,10 +1,11 @@
-QT += quick
+QT += quick multimedia
+QTPLUGIN += qtaudio_coreaudio
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
+# voibolla siiski parem teha ise audio valjund, uuri: https://wiki.qt.io/QtMultimedia_on_iOS_and_tvOS
 
 RESOURCES += qml.qrc
 
@@ -15,7 +16,15 @@ macos {
 
 }
 
+# add test.csd by hand in XCode to Reosurces (Add files, set copy, targets) or add BUNDLE_DATA somehowß
+
 ios {
+
+
+    csdfiles.files = test.csd
+    QMAKE_BUNDLE_DATA += csdfiles
+
+
 
     SOURCES += \
         csoundproxy.mm \

@@ -28,7 +28,12 @@ Window {
         anchors.centerIn:  parent
         text: "Play"
 
-        onClicked: console.log("Cicked")
+        onClicked: {
+
+            console.log("Cicked")
+            csoundProxy.play()
+        }
+
 
 
     }
