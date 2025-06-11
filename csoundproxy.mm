@@ -1,9 +1,3 @@
-
-//#import "CsoundObj.h"
-//#include "csound-iOS/classes/CsoundObj.h"
-//#include "csound.h"
-
-
 #import "csoundproxy.h"
 
 #import "csound-iOS/classes/CsoundObj.h"
@@ -41,7 +35,6 @@ CsoundProxy::CsoundProxy(QObject *parent)
 
     [(CsoundObj *)cs play:csdFile];
     
-    NSLog(@"Csound after play");
     csound = nullptr;
 
     const int maxAttempts = 100; // 100 × 10ms = 1 second
@@ -60,16 +53,10 @@ CsoundProxy::CsoundProxy(QObject *parent)
     } else {
         qWarning() << "Timeout: Csound did not initialize in time.";
     }
-
-
-    
-
-
 }
 
 CsoundProxy::~CsoundProxy()
 {
-    //CsoundObj *csObj = (CsoundObj *)cs;
   csoundCleanup(csound); // not sure if needed
   csoundDestroy(csound);
   cs = nullptr;
@@ -78,19 +65,7 @@ CsoundProxy::~CsoundProxy()
 
 
 void CsoundProxy::play()
-{
-    if (!cs) {
-            NSLog(@"[CsoundProxy] CsoundObj pointer is null");
-            return;
-        }
-    NSLog(@"CsoundProxy PLAY");
-
-   //  CsoundObj *csObj = (__bridge CsoundObj *)cs;
-   
-    
-   //  CSOUND *csound = [csObj getCsound];
-    // NSLog(@"Csound: %@", csound);
-    
+{    
     if (csound) {
         csoundInputMessage(csound, "i 1 0.1 3  0.8");
     } else {
