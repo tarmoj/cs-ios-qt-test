@@ -2,7 +2,7 @@
 #define CSOUNDPROXY_H
 
 #include <QObject>
-
+#include <csound.h>
 
 class CsoundProxy: public QObject
 {
@@ -17,7 +17,8 @@ public:
     //CSOUND * getCsound();
     
 private:
-    void * cs;
+    void * cs; // CsoundObj will be pointed here. Cannot import Objective C CsoundObj here
+    CSOUND * csound;
 };
 
 #endif // CSOUNDPROXY_H

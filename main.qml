@@ -3,6 +3,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 
 Window {
+    id: app
     width: 640
     height: 480
     visible: true
@@ -37,8 +38,9 @@ Window {
     }
 
     Slider {
-        anchors.centerIn:  parent
-        anchors.topMargin: -50
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: playButton.bottom
+        anchors.topMargin: 10
         from: 100
         to:1000
 

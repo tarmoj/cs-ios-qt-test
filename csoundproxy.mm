@@ -5,36 +5,30 @@
 
 
 #import "csoundproxy.h"
-#include "qdebug.h"
 
 #import "csound-iOS/classes/CsoundObj.h"
 
+#include <QDebug>
+#include <QThread>
 
-@interface CsoundBridgeLogger : NSObject <CsoundObjListener>
-@end
 
-@implementation CsoundBridgeLogger
+extern "C" {
+    void csoundMessageCallback(CSOUND *csound, int attr, const char *format, va_list args) {
+        char buffer[1024];
+        vsnprintf(buffer, sizeof(buffer), format, args);
 
-- (void)messageReceivedFromCsound:(CsoundObj *)csound message:(NSString *)message {
-    NSLog(@"[CsoundLog] %@", message);
+        // You can filter or route messages based on attr here if needed
+        qDebug().noquote() << "[Csound] " << buffer;
+    }
 }
-
-@end
 
 CsoundProxy::CsoundProxy(QObject *parent)
 : QObject(parent)
 {
   
-  CsoundBridgeLogger *logger = [[CsoundBridgeLogger alloc] init];
-
-
-
    //cs = [[CsoundObj alloc] init ];
    CsoundObj *csObj = [[CsoundObj alloc] init];
    cs = (void *)csObj;
-
-  [csObj addListener:logger];
-  [csObj setMessageCallbackSelector:@selector(messageReceivedFromCsound:)];
     
     if (!cs) {
         NSLog(@"Failed to initialize CsoundObj");
@@ -43,13 +37,31 @@ CsoundProxy::CsoundProxy(QObject *parent)
     }
     
     NSString *csdFile = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"csd"];
-        NSLog(@"Csound FILE PATH: %@", csdFile);
-    
-    
+        NSLog(@"Csound FILE PATH: %@", csdFile);    
 
     [(CsoundObj *)cs play:csdFile];
     
     NSLog(@"Csound after play");
+    csound = nullptr;
+
+    const int maxAttempts = 100; // 100 × 10ms = 1 second
+    int attempts = 0;
+    while (attempts++ < maxAttempts) {
+        csound = [(CsoundObj *)cs getCsound];
+        if (csound != nullptr) {
+            csoundSetMessageCallback(csound, csoundMessageCallback);
+            break;
+        }
+        QThread::msleep(10);
+    }
+
+    if (csound) {
+        qDebug() << "Csound is ready:" << csound << "in " << attempts*10 << " ms";
+    } else {
+        qWarning() << "Timeout: Csound did not initialize in time.";
+    }
+
+
     
 
 
@@ -58,7 +70,10 @@ CsoundProxy::CsoundProxy(QObject *parent)
 CsoundProxy::~CsoundProxy()
 {
     //CsoundObj *csObj = (CsoundObj *)cs;
-    cs = nullptr;
+  csoundCleanup(csound); // not sure if needed
+  csoundDestroy(csound);
+  cs = nullptr;
+
 }
 
 
@@ -70,53 +85,28 @@ void CsoundProxy::play()
         }
     NSLog(@"CsoundProxy PLAY");
 
-    CsoundObj *csObj = (__bridge CsoundObj *)cs;
+   //  CsoundObj *csObj = (__bridge CsoundObj *)cs;
    
     
-    CSOUND *csound = [csObj getCsound];
+   //  CSOUND *csound = [csObj getCsound];
     // NSLog(@"Csound: %@", csound);
     
     if (csound) {
-        NSLog(@"Csound is not NULL");
-        csoundReadScore(csound, "i 1 0.1 3  0.8");
-        
+        csoundInputMessage(csound, "i 1 0.1 3  0.8");
     } else {
         NSLog(@"Csound is null");
     }
-    
-    float randomValue = 100 + (arc4random_uniform(901)); // 100–1000 inclusive
-       NSLog(@"[CsoundProxy] Setting slider channel to: %f", randomValue);
-    NSString *score = [NSString stringWithFormat:@"i2 0.1 2 %f", randomValue];
-    //[csObj sendScore:@"i1 0.05 2 0.6"];
-    //[csObj sendScore:score];
-    
-
-
-   
-    
        
 }
 
 void CsoundProxy::setChannel(QString channel, double value)
 {
-    if (!cs) {
-            NSLog(@"[CsoundProxy] CsoundObj pointer is null");
-            return;
-        }
-    qDebug() << "Channel: " << channel << " value: " << value;
-
-    CsoundObj *csObj = (__bridge CsoundObj *)cs;
-
-
-    CSOUND *csound = [csObj getCsound];
-    // NSLog(@"Csound: %@", csound);
-
     if (csound) {
-        NSLog(@"Csound is not NULL");
+        qDebug() << "Channel: " << channel << " value: " << value;
         csoundSetControlChannel(csound, channel.toUtf8().constData(), value) ;
 
     } else {
-        NSLog(@"Csound is null");
+        qDebug() << "Csound is null";
     }
 }
 
